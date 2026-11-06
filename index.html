@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omar's Docx Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f4f4f9;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Omar's Live Word Document Generator</h1>
+    <p>Click the button below to generate and download your `.docx` file instantly!</p>
+    
+    <button id="downloadBtn">Download Word Document</button>
+
+    <script>
+        document.getElementById("downloadBtn").addEventListener("click", async () => {
+            try {
+                const response = await fetch("/download-doc");
+                if (!response.ok) throw new Error("Failed to fetch file from server.");
+                
+                const blob = await response.blob();
+                const downloadUrl = URL.createObjectURL(blob);
+                
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                a.download = "Omar_Report.docx";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                
+                URL.revokeObjectURL(downloadUrl);
+            } catch (error) {
+                console.error("Error downloading file:", error);
+                alert("Something went wrong with the download. Check the console!");
+            }
+        });
+    </script>
+
+</body>
+</html>
